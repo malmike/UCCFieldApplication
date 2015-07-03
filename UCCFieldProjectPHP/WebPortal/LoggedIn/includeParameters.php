@@ -1,0 +1,9 @@
+<?php
+	include'emphome.php';
+	include'../../ConnectDB/Sanitize.php';
+	include'../../ConnectDB/connect.php';
+	include'../Login/logout.php';
+	include'employeePage.php';
+	include'sendNotification.php';
+    include'supervisorPage.php';
+?>
