@@ -1,3 +1,5 @@
 *.suo
 UCCFieldApplication/Bin/
 UCCFieldApplication/obj/
+bin
+App_Data
