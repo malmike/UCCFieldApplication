@@ -32,13 +32,14 @@ namespace UCCFieldApplication
             public Action<CancelEventArgs> OnBackKeyPress { get; set; }
         }
 
-        PivotCallbacks _callbacks;
+        //PivotCallbacks _callbacks;
 
 
         // This is the url that will checked by the php file
         
         //private string phpAddress = "http://localhost/UCCFieldProject/Mobile/RetrieveEmployeeDetails/getReason.php";
         private string phpAddress = "http://localhost:29776/UCCFieldProjectPHP/Mobile/RetrieveEmployeeDetails/getReason.php";
+        private string updateApprovalURI = "http://localhost:29776/UCCFieldProjectPHP/Mobile/ChangeApproval/ChangeApproval.php";
         
         public SupervisorPage()
         {
@@ -209,16 +210,23 @@ namespace UCCFieldApplication
             while (llsEmployee.SelectedItems.Count > 0)
             {
                 employeeList.Add((EmployeeCheckIn)llsEmployee.SelectedItems[0]);
+                source.Remove((EmployeeCheckIn)llsEmployee.SelectedItems[0]);
             }
-
-
-
+            changeApproval(updateApprovalURI, employeeList, employeeList.Count(), "Accept");
         }
 
         void OnDenyClick(object sender, EventArgs e)
         {
-
+            IList source = llsEmployee.ItemsSource as IList;
+            List<EmployeeCheckIn> employeeList = new List<EmployeeCheckIn>();
+            while (llsEmployee.SelectedItems.Count > 0)
+            {
+                employeeList.Add((EmployeeCheckIn)llsEmployee.SelectedItems[0]);
+                source.Remove((EmployeeCheckIn)llsEmployee.SelectedItems[0]);
+            }
+            changeApproval(updateApprovalURI, employeeList, employeeList.Count(), "Deny");
         }
+
         private void SupervisorBackKeyPressed(CancelEventArgs obj)
         {
 
@@ -289,6 +297,7 @@ namespace UCCFieldApplication
         private async void changeApproval(string address, List<EmployeeCheckIn> _empList, int _listLength, string approval)
         {
             response = new HttpResponseMessage();
+            
 
             Uri resourceUri;
             if (!Uri.TryCreate(address.Trim(), UriKind.Absolute, out resourceUri))
@@ -310,16 +319,19 @@ namespace UCCFieldApplication
                 MultipartFormDataContent content = new MultipartFormDataContent();
                 foreach (EmployeeCheckIn emp in _empList)
                 {
-                    content.Add((new StringContent(emp.CheckID.ToString(), System.Text.Encoding.UTF8, "text/plain")), "Emp"+x);
+                    content.Add((new StringContent(emp.CheckID.ToString(), System.Text.Encoding.UTF8, "text/plain")), "CheckID"+x);
+             
                     x++;
                 }
-                content.Add((new StringContent(_listLength.ToString(), System.Text.Encoding.UTF8, "text/plain")), "Limit");
                 content.Add((new StringContent(approval, System.Text.Encoding.UTF8, "text/plain")), "Approval");
+                content.Add((new StringContent(_listLength.ToString(), System.Text.Encoding.UTF8, "text/plain")), "Limit");
+
 
                 response = await httpClient.PostAsync(resourceUri, content);
                 response.EnsureSuccessStatusCode();
                 responseText = await response.Content.ReadAsStringAsync();
 
+                MessageBox.Show(responseText.ToString());
                 return; //responseText;
 
             }

@@ -2,15 +2,26 @@
     include"../../ConnectDB/connect.php";
 	include"../../ConnectDB/Sanitize.php";
 
-	$Approval = clean($_POST['Approval']);
+	$Limit = clean($_POST['Limit']);
+    $Approval = clean($_POST['Approval']);
+    $value = "";
 
-    if($Approval == "Accept")
+    insertDB($Approval, clean($_POST['CheckID0']), $dbo); 
+
+    for($x=0; $x<$Limit; $x++)
     {
-       $sql = "UPDATE `employeelogs` SET `Approval`=[value-6] WHERE `CheckID`="; 
-    }else if($Approval == "Deny")
-    {
-        
+        $Check = 'CheckID'.$x;
+         insertDB($Approval, clean($_POST[$Check]), $dbo); 
+         echo clean($POST[$Check]);
     }
+
+    function insertDB($Approval, $CheckID,$dbo)
+    {
+        $sql = "UPDATE `employeelogs` SET `Approval`='$Approval' WHERE `CheckID`='$CheckID'"; 
+        $row=$dbo->prepare($sql);
+		$row->execute();
+    }
+    
 
 ?>
 
