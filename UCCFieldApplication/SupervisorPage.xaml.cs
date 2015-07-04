@@ -87,28 +87,8 @@ namespace UCCFieldApplication
                 settings.deleteNavigationSetting();
             }
 
-            
-           
-
-            
-
             supViewModel.LoadEmployeeCheckInData();
-           // DataContext = supViewModel;
-            llsEmployee.ItemsSource = supViewModel.Employee;
-
-            //if (this.NavigationContext.QueryString.ContainsKey("employeeID"))
-            //{
-            //    string location;
-            //    string employeeID;
-            //    malmike.Text = this.NavigationContext.QueryString["employeeName"];
-            //    m.Text = employeeID = this.NavigationContext.QueryString["employeeID"];
-            //    a.Text = location = this.NavigationContext.QueryString["location"];
-            //    l.Text = this.NavigationContext.QueryString["checkType"];
-            //    i.Text = reason.DataElements(await connectHttp(phpAddress, employeeID, location));
-
-                
-            //}
-            
+            llsEmployee.ItemsSource = supViewModel.Employee;            
 
         }
 
@@ -210,6 +190,8 @@ namespace UCCFieldApplication
             while (llsEmployee.SelectedItems.Count > 0)
             {
                 employeeList.Add((EmployeeCheckIn)llsEmployee.SelectedItems[0]);
+                viewModel.updateApproval(((EmployeeCheckIn)llsEmployee.SelectedItems[0]).CheckID, "Accept");
+
                 source.Remove((EmployeeCheckIn)llsEmployee.SelectedItems[0]);
             }
             changeApproval(updateApprovalURI, employeeList, employeeList.Count(), "Accept");
@@ -222,6 +204,8 @@ namespace UCCFieldApplication
             while (llsEmployee.SelectedItems.Count > 0)
             {
                 employeeList.Add((EmployeeCheckIn)llsEmployee.SelectedItems[0]);
+                viewModel.updateApproval(((EmployeeCheckIn)llsEmployee.SelectedItems[0]).CheckID, "Deny");
+
                 source.Remove((EmployeeCheckIn)llsEmployee.SelectedItems[0]);
             }
             changeApproval(updateApprovalURI, employeeList, employeeList.Count(), "Deny");

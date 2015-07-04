@@ -59,6 +59,14 @@ namespace UCCFieldApplication.ViewModels
             context.SubmitChanges();
         }
 
+
+        public void updateApproval(int CheckID, string approvalUpdate)
+        {
+            EmployeeCheckIn checkIn = context.Employees.Single(n => n.CheckID == CheckID);
+            checkIn.Approval = approvalUpdate;
+            context.SubmitChanges();
+        }
+
         //public string getFinalValue()
         //{
         //    return context.Employees.Take(100).ToList().Last().EmployeeName;

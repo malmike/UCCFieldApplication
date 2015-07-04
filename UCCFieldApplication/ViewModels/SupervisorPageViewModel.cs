@@ -32,12 +32,15 @@ namespace UCCFieldApplication.ViewModels
         {
             if (context.Employees.Count() > 0)
             {
-                List<EmployeeCheckIn> employeeCIO = context.Employees.ToList<EmployeeCheckIn>();
+                //List<EmployeeCheckIn> employeeCIO = context.Employees.ToList<EmployeeCheckIn>();
+                // List<EmployeeCheckIn> employeeCIO = 
+                List<EmployeeCheckIn> employeeCIO = context.Employees.Where(n => n.Approval == "Pending").ToList();
                 Employee = new ObservableCollection<EmployeeCheckIn>(employeeCIO);
 
             }
             IsDataLoaded = true;
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
