@@ -1,4 +1,5 @@
 <?php 
+ 	
 	function login()
 	{
 		session_start();
@@ -17,7 +18,7 @@
 			<div class="form-group"> 
 				<label for="name">EMPLOYEE ID</label> 
 				<input type="text" class="form-control" name="id" id="id" placeholder = <?php echo $id ?>> 
-			</div> <div class="form-group"> 
+			</div> 
 			
 			<button type="submit" class="btn btn-default">SUBMIT</button> 
 		</form>
@@ -34,6 +35,7 @@
 <?php
 	function autheticate($dbo)
 	{
+
 		//Start session
 		session_start();
 		
@@ -86,7 +88,14 @@
 				echo $_SESSION['SESS_EMPLOYEE_ID'];
 			}
 				
-			$id = clean($_SESSION['SESS_EMPLOYEE_ID']);
+			
+            $id = clean($_SESSION['SESS_EMPLOYEE_ID']);
+            	
+			$sessionid=session_id(); 
+
+            
+            storeSession($dbo, $id, $sessionid);
+			 	
 			$sql = "SELECT `Serial`, `EmpFn`, `FirstName`, `LastName` FROM `employees` WHERE `Serial`=
 					(SELECT `Acting` FROM `employees` WHERE `Serial`=
 					(SELECT `Supervisor` FROM `employees` WHERE `EmpFn`='$id'))";
@@ -107,6 +116,7 @@
 			}	
 			session_write_close();
 			header("location: index.php");
+
 			exit();
 		}else {
 			//Login failed
@@ -117,4 +127,14 @@
 		
 			
 	}
+?>
+
+<?php  
+    function storeSession($dbo, $id, $sessionid){
+
+        $ins = "INSERT INTO `sessions`(`EmpFn`, `SessionID`) VALUES ('$id', '$sessionid')";
+		$insert=$dbo->prepare($ins);
+		$insert->execute();
+		
+    }
 ?>
