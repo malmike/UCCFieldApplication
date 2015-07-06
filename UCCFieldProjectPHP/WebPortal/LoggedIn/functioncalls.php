@@ -18,7 +18,7 @@
 		{		
 			
 			case "logout":
-				logout();
+				logout($dbo);
 				break;
 			case "employee":
 				employeePage();
